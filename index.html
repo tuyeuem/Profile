@@ -1,0 +1,339 @@
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(.95)}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes starFloat{0%{opacity:0;transform:translateY(0) scale(0)}20%{opacity:1}80%{opacity:.5}100%{opacity:0;transform:translateY(-80px) scale(1.5)}}
+@keyframes ripple{0%{transform:scale(0);opacity:.6}100%{transform:scale(4);opacity:0}}
+@keyframes barPulse{0%,100%{height:4px}50%{height:16px}}
+
+body{background:#0a0a14;font-family:'Segoe UI',sans-serif;color:#e0d7f5;min-height:100vh;overflow-x:hidden;}
+
+.splash{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a0f3a 0%,#0a0a14 70%);cursor:pointer;z-index:10;}
+.splash-stars{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.star{position:absolute;border-radius:50%;background:#fff;}
+.splash-content{text-align:center;animation:fadeIn 1s ease;}
+.splash-logo{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#7c4dff,#c24fff);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;font-weight:700;color:#fff;animation:float 3s ease-in-out infinite;box-shadow:0 0 40px rgba(124,77,255,.5);}
+.splash-title{font-size:28px;font-weight:700;background:linear-gradient(90deg,#c084fc,#818cf8,#c084fc);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite;}
+.splash-sub{font-size:13px;color:#8b7aa8;margin-top:8px;letter-spacing:1px;}
+.tap-hint{margin-top:32px;font-size:13px;color:#7c6ba0;animation:pulse 2s ease-in-out infinite;border:1px solid #3d2f6e;padding:10px 24px;border-radius:999px;display:inline-block;}
+
+.page{display:none;animation:fadeIn .6s ease;}
+.page.visible{display:block;}
+
+.hero{position:relative;min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px 30px;background:radial-gradient(ellipse at 50% 0%,#1e0f4a 0%,#0a0a14 70%);overflow:hidden;}
+.hero-particles{position:absolute;inset:0;pointer-events:none;}
+.particle{position:absolute;border-radius:50%;background:rgba(192,132,252,.4);}
+
+.avatar-wrap{position:relative;margin-bottom:16px;animation:float 4s ease-in-out infinite;}
+.avatar-outer{width:100px;height:100px;border-radius:50%;padding:3px;background:linear-gradient(135deg,#7c4dff,#ec4899,#7c4dff);background-size:200%;animation:shimmer 3s linear infinite;}
+.avatar-inner{width:100%;height:100%;border-radius:50%;background:#1a0f3a;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;color:#c084fc;}
+.avatar-ring{position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(192,132,252,.3);animation:spin 8s linear infinite;}
+
+.hero-name{font-size:26px;font-weight:700;letter-spacing:.5px;background:linear-gradient(90deg,#e2d9f3,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-age{font-size:13px;color:#7c6ba0;margin-top:4px;letter-spacing:1px;}
+.hero-social{display:flex;gap:12px;margin-top:16px;}
+.soc-btn{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:transform .2s;position:relative;overflow:hidden;}
+.soc-btn:hover{transform:scale(1.1);}
+.soc-btn::after{content:'';position:absolute;inset:0;border-radius:50%;background:rgba(255,255,255,.2);transform:scale(0);animation:none;}
+.soc-btn:hover::after{animation:ripple .4s ease-out;}
+.tg-btn{background:linear-gradient(135deg,#229ed9,#0088cc);}
+.fb-btn{background:linear-gradient(135deg,#1877f2,#0a58ca);}
+
+.nav-bar{display:flex;gap:0;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.06);background:#0e0b1e;overflow-x:auto;scrollbar-width:none;}
+.nav-bar::-webkit-scrollbar{display:none;}
+.nav-btn{padding:12px 18px;font-size:13px;color:#7c6ba0;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;flex-shrink:0;}
+.nav-btn.active{color:#c084fc;border-bottom-color:#c084fc;}
+.nav-btn:hover{color:#e0d7f5;}
+
+.content-area{padding:20px 16px 100px;}
+.section{display:none;animation:slideUp .35s ease;}
+.section.active{display:block;}
+
+.sec-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#5b4c80;margin-bottom:14px;}
+.card{background:#120d26;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:16px;margin-bottom:12px;transition:border-color .2s;}
+.card:hover{border-color:rgba(192,132,252,.25);}
+
+.intro-text{font-size:14px;color:#b8aad4;line-height:1.8;}
+.trait-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.trait-chip{padding:5px 13px;border-radius:999px;border:1px solid rgba(192,132,252,.3);font-size:12px;color:#c084fc;background:rgba(192,132,252,.08);}
+
+.hobby-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.hobby-card{background:#120d26;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px 14px;display:flex;align-items:center;gap:12px;transition:all .2s;cursor:default;}
+.hobby-card:hover{border-color:rgba(192,132,252,.4);background:#1a1035;transform:translateY(-2px);}
+.hobby-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.hobby-label{font-size:13px;font-weight:500;color:#d4c8f0;}
+.hobby-desc{font-size:11px;color:#6b5f8a;margin-top:2px;}
+
+.contact-link{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;background:#120d26;border:1px solid rgba(255,255,255,.07);text-decoration:none;transition:all .2s;margin-bottom:10px;color:#e0d7f5;}
+.contact-link:hover{border-color:rgba(192,132,252,.4);background:#1a1035;transform:translateX(4px);}
+.contact-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.contact-name{font-size:14px;font-weight:600;}
+.contact-handle{font-size:12px;color:#7c6ba0;margin-top:2px;}
+.contact-arrow{margin-left:auto;color:#5b4c80;font-size:18px;transition:transform .2s;}
+.contact-link:hover .contact-arrow{transform:translateX(3px);color:#c084fc;}
+.tg-note{font-size:12px;color:#6b5f8a;padding:8px 14px;background:rgba(34,158,217,.06);border-radius:8px;border-left:2px solid rgba(34,158,217,.3);}
+
+.music-bar{position:relative;margin-top:20px;background:#120d26;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:16px;overflow:hidden;}
+.music-ticker{overflow:hidden;white-space:nowrap;font-size:12px;color:#8b7aa8;}
+.music-ticker-inner{display:inline-block;animation:marquee 15s linear infinite;}
+.music-controls{display:flex;align-items:center;gap:12px;margin-top:12px;}
+.music-info{flex:1;min-width:0;}
+.music-song{font-size:13px;font-weight:600;color:#e0d7f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.music-artist{font-size:11px;color:#7c6ba0;margin-top:2px;}
+.music-btn{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#7c4dff,#c24fff);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;transition:transform .15s;}
+.music-btn:hover{transform:scale(1.1);}
+.music-btn:active{transform:scale(.95);}
+.bars{display:flex;align-items:flex-end;gap:3px;height:20px;flex-shrink:0;}
+.bar{width:3px;border-radius:2px;background:#7c4dff;animation:barPulse .8s ease-in-out infinite;}
+.bar:nth-child(2){animation-delay:.15s;}
+.bar:nth-child(3){animation-delay:.3s;}
+.bar:nth-child(4){animation-delay:.1s;}
+.bar.paused{animation:none;height:4px;}
+
+.footer{text-align:center;padding:20px;font-size:11px;color:#3d3460;border-top:1px solid rgba(255,255,255,.04);margin-top:10px;}
+
+.vol-row{display:flex;align-items:center;gap:10px;margin-top:10px;}
+.vol-label{font-size:11px;color:#7c6ba0;flex-shrink:0;}
+input[type=range].vol{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,.1);outline:none;cursor:pointer;}
+input[type=range].vol::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#7c4dff;cursor:pointer;}
+</style>
+
+<div class="splash" id="splash">
+  <div class="splash-stars" id="stars"></div>
+  <div class="splash-content">
+    <div class="splash-logo">TT</div>
+    <div class="splash-title">Thanh Tú</div>
+    <div class="splash-sub">Trang cá nhân</div>
+    <div class="tap-hint">Chạm để vào trang ✦</div>
+  </div>
+</div>
+
+<div class="page" id="mainPage">
+  <div class="hero">
+    <div class="hero-particles" id="heroParticles"></div>
+    <div class="avatar-wrap">
+      <div class="avatar-outer">
+        <div class="avatar-inner">TT</div>
+      </div>
+      <div class="avatar-ring"></div>
+    </div>
+    <div class="hero-name">Thanh Tú</div>
+    <div class="hero-age">18 tuổi · Hướng nội</div>
+    <div class="hero-social">
+      <a class="soc-btn fb-btn" href="https://www.facebook.com/share/19qXD7cyry/?mibextid=wwXIfr" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.313 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.932-1.956 1.889v2.266h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+      </a>
+      <a class="soc-btn tg-btn" href="https://t.me/iituss" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-btn active" data-tab="intro">Giới thiệu</div>
+    <div class="nav-btn" data-tab="hobby">Sở thích</div>
+    <div class="nav-btn" data-tab="contact">Liên hệ</div>
+    <div class="nav-btn" data-tab="music">Nhạc</div>
+  </div>
+
+  <div class="content-area">
+    <div class="section active" id="tab-intro">
+      <p class="sec-title">Giới thiệu bản thân</p>
+      <div class="card">
+        <p class="intro-text">Mình là <strong style="color:#c084fc">Thanh Tú</strong>, 18 tuổi. Tôi là một người hướng nội — thích sự yên tĩnh, thường suy nghĩ nhiều và quan sát mọi thứ xung quanh theo cách riêng của mình.</p>
+        <div class="trait-row">
+          <span class="trait-chip">Hướng nội</span>
+          <span class="trait-chip">Điềm tĩnh</span>
+          <span class="trait-chip">Hay suy nghĩ</span>
+          <span class="trait-chip">Quan sát</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="tab-hobby">
+      <p class="sec-title">Sở thích</p>
+      <div class="hobby-grid">
+        <div class="hobby-card">
+          <div class="hobby-icon" style="background:rgba(139,92,246,.15);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </div>
+          <div><div class="hobby-label">Nghe nhạc</div><div class="hobby-desc">Lo-fi & chill</div></div>
+        </div>
+        <div class="hobby-card">
+          <div class="hobby-icon" style="background:rgba(236,72,153,.12);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f472b6" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div><div class="hobby-label">Trò chuyện</div><div class="hobby-desc">Kết bạn mới</div></div>
+        </div>
+        <div class="hobby-card">
+          <div class="hobby-icon" style="background:rgba(34,197,94,.1);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M9 10h.01M7 14h.01M10 14h.01M14 10h4M16 14h2"/></svg>
+          </div>
+          <div><div class="hobby-label">Chơi game</div><div class="hobby-desc">Mobile & PC</div></div>
+        </div>
+        <div class="hobby-card">
+          <div class="hobby-icon" style="background:rgba(251,191,36,.1);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <div><div class="hobby-label">Xem phim</div><div class="hobby-desc">Drama & Anime</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="tab-contact">
+      <p class="sec-title">Liên hệ</p>
+      <a class="contact-link" href="https://www.facebook.com/share/19qXD7cyry/?mibextid=wwXIfr" target="_blank">
+        <div class="contact-icon" style="background:rgba(24,119,242,.2);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.313 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.932-1.956 1.889v2.266h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+        </div>
+        <div>
+          <div class="contact-name">Facebook</div>
+          <div class="contact-handle">Trang cá nhân của mình</div>
+        </div>
+        <div class="contact-arrow">›</div>
+      </a>
+      <div class="tg-note" style="margin-bottom:10px;">
+        <span style="color:#7c6ba0;font-size:11px;">Telegram:</span> <span style="color:#93c5fd;">@iìtus</span> — Nhắn trực tiếp cho mình nhé!
+      </div>
+      <a class="contact-link" href="https://t.me/iituss" target="_blank">
+        <div class="contact-icon" style="background:rgba(34,158,217,.15);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#229ed9"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </div>
+        <div>
+          <div class="contact-name">Telegram</div>
+          <div class="contact-handle">@iìtus</div>
+        </div>
+        <div class="contact-arrow">›</div>
+      </a>
+    </div>
+
+    <div class="section" id="tab-music">
+      <p class="sec-title">Nhạc nền</p>
+      <div class="music-bar">
+        <div class="music-ticker">
+          <span class="music-ticker-inner">✦ Homesick — Loving Caliber &nbsp;&nbsp;&nbsp; ✦ Homesick — Loving Caliber &nbsp;&nbsp;&nbsp; ✦ Homesick — Loving Caliber &nbsp;&nbsp;&nbsp; ✦ Homesick — Loving Caliber &nbsp;&nbsp;&nbsp;</span>
+        </div>
+        <div class="music-controls">
+          <div class="music-info">
+            <div class="music-song">Homesick</div>
+            <div class="music-artist">Loving Caliber</div>
+          </div>
+          <div class="bars" id="vizBars">
+            <div class="bar" style="animation-delay:0s;"></div>
+            <div class="bar" style="animation-delay:.15s;"></div>
+            <div class="bar" style="animation-delay:.3s;"></div>
+            <div class="bar" style="animation-delay:.1s;"></div>
+          </div>
+          <button class="music-btn" id="playBtn" title="Phát/Dừng">
+            <svg id="playIcon" width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M5 3l14 9-14 9z"/></svg>
+            <svg id="pauseIcon" width="16" height="16" viewBox="0 0 24 24" fill="white" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          </button>
+        </div>
+        <div class="vol-row">
+          <span class="vol-label">Âm lượng</span>
+          <input type="range" class="vol" id="volSlider" min="0" max="100" value="50">
+          <span style="font-size:11px;color:#7c6ba0;min-width:28px;" id="volVal">50</span>
+        </div>
+        <div style="margin-top:12px;font-size:11px;color:#4a3d6e;text-align:center;">
+          Nhạc phát từ YouTube Music · Bấm nút phát để bắt đầu
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px;">
+        <div style="font-size:12px;color:#7c6ba0;margin-bottom:8px;">Về bài nhạc</div>
+        <p style="font-size:13px;color:#b8aad4;line-height:1.7;">
+          <strong style="color:#c084fc">Homesick</strong> của <strong style="color:#c084fc">Loving Caliber</strong> — giai điệu nhẹ nhàng, da diết, mang cảm giác hoài niệm và ấm áp. Hoàn hảo để nghe khi thư giãn một mình.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">© 2026 Thanh Tú · All Rights Reserved</div>
+</div>
+
+<script>
+(function(){
+  const splashEl = document.getElementById('splash');
+  const mainPage = document.getElementById('mainPage');
+  const starsContainer = document.getElementById('stars');
+
+  for(let i=0;i<60;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*2+.5;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;opacity:${Math.random()*.7+.2};`;
+    starsContainer.appendChild(s);
+  }
+
+  const heroP = document.getElementById('heroParticles');
+  for(let i=0;i<8;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const sz=Math.random()*3+2;
+    p.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;opacity:${Math.random()*.4+.1};animation:starFloat ${3+Math.random()*4}s ${Math.random()*3}s ease-in-out infinite;`;
+    heroP.appendChild(p);
+  }
+
+  splashEl.addEventListener('click',()=>{
+    splashEl.style.transition='opacity .5s';
+    splashEl.style.opacity='0';
+    setTimeout(()=>{
+      splashEl.style.display='none';
+      mainPage.classList.add('visible');
+      initAudio();
+    },500);
+  });
+
+  document.querySelectorAll('.nav-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  let audio=null, playing=false;
+  const playBtn=document.getElementById('playBtn');
+  const playIcon=document.getElementById('playIcon');
+  const pauseIcon=document.getElementById('pauseIcon');
+  const bars=document.querySelectorAll('.bar');
+  const volSlider=document.getElementById('volSlider');
+  const volVal=document.getElementById('volVal');
+
+  function initAudio(){
+    audio=new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+    audio.loop=true;
+    audio.volume=0.5;
+    audio.addEventListener('ended',()=>{audio.currentTime=0;audio.play();});
+  }
+
+  function setPlaying(val){
+    playing=val;
+    playIcon.style.display=val?'none':'block';
+    pauseIcon.style.display=val?'block':'none';
+    bars.forEach(b=>{
+      if(val){b.classList.remove('paused');}
+      else{b.classList.add('paused');}
+    });
+  }
+
+  playBtn.addEventListener('click',()=>{
+    if(!audio){initAudio();}
+    if(playing){audio.pause();setPlaying(false);}
+    else{audio.play().then(()=>setPlaying(true)).catch(()=>{});}
+  });
+
+  volSlider.addEventListener('input',()=>{
+    const v=parseInt(volSlider.value);
+    volVal.textContent=v;
+    if(audio)audio.volume=v/100;
+  });
+})();
+</script>
